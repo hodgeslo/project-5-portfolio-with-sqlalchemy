@@ -1,5 +1,5 @@
 from flask import render_template, url_for, request, redirect
-from models import app, Project, db, add_csv
+from models import app, Project, db, add_csv_dict
 
 
 @app.route('/')
@@ -29,6 +29,6 @@ def delete_project(id):
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
-        add_csv()
+        # db.create_all()
+        add_csv_dict()
     app.run(debug=True, port=9000)

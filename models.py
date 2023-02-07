@@ -14,7 +14,7 @@ class Project(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column('Title', db.String())
-    date_created = db.Column('Date Created', db.DateTime,
+    date_created = db.Column('Date Created', db.Date,
                              default=datetime.datetime.now)  # .now instead of .now(). We want to run every time a record is created
     description = db.Column('Description', db.Text)
     skills = db.Column('Skills', db.Text)
@@ -31,24 +31,48 @@ def __repr__(self):
     '''
 
 
-def add_csv():
+# def add_csv():
+#     csv_file_to_import = 'projects.csv'
+#     if path.isfile(csv_file_to_import):
+#         db.create_all()
+#         with open(csv_file_to_import) as csvfile:
+#             data = csv.reader(csvfile, delimiter='\t')
+#             next(data)  # <<< skip header row
+#             for row in data:
+#                 product_in_db = db.session.query(Project).filter(Project.title == row[0]).one_or_none()
+#                 if product_in_db is None:
+#                     title = row[0]
+#                     date_created = datetime.datetime.strptime(row[1], '%Y-%m-%d')
+#                     description = row[2]
+#                     skills = row[3]
+#                     repo_link = row[4]
+#                     new_project = Project(title=title, date_created=date_created,
+#                                           description=description, skills=skills, repo_link=repo_link)
+#                     db.session.add(new_project)
+#             db.session.commit()
+#         return True
+#     else:
+#         print(f"CSV to import not found.")
+#         print(f"Quitting application...")
+#         return False
+
+
+def add_csv_dict():
     csv_file_to_import = 'projects.csv'
     if path.isfile(csv_file_to_import):
         db.create_all()
-        with open(csv_file_to_import) as csvfile:
-            data = csv.reader(csvfile, delimiter='\t')
-            next(data)  # <<< skip header row
-            for row in data:
-                product_in_db = db.session.query(Project).filter(Project.title == row[0]).one_or_none()
-                if product_in_db is None:
-                    title = row[0]
-                    date_created = datetime.datetime.strptime(row[1], '%Y-%m-%d')
-                    description = row[2]
-                    skills = row[3]
-                    repo_link = row[4]
-                    new_project = Project(title=title, date_created=date_created,
-                                          description=description, skills=skills, repo_link=repo_link)
-                    db.session.add(new_project)
+        with open(csv_file_to_import, newline='') as csvfile:
+            reader = csv.DictReader(csvfile, delimiter='\t')
+            print(f"READER: {list(reader)}")
+            for row in reader:
+                title = row['title']
+                date_created = datetime.datetime.strptime(row['date_created'], '%m/%d/%Y')
+                description = row['description']
+                skills = row['skills']
+                repo_link = row['repo_link']
+                new_project = Project(title=title, date_created=date_created,
+                                      description=description, skills=skills, repo_link=repo_link)
+                db.session.add(new_project)
             db.session.commit()
         return True
     else:

@@ -153,3 +153,4 @@ cython_debug/
 *.xml
 *.iml
 python-sqlalchemy-portfolio-master.zip
+projects.csv
