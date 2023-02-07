@@ -1,10 +1,11 @@
 from flask import render_template, url_for, request, redirect
-from models import app, Project, db, add_csv_dict
+from models import app, Project, db, add_csv
 
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    projects = Project.query.all()
+    return render_template('index.html', projects=projects)
 
 
 @app.route('/projects/')
@@ -29,6 +30,5 @@ def delete_project(id):
 
 if __name__ == '__main__':
     with app.app_context():
-        # db.create_all()
-        add_csv_dict()
+        add_csv()
     app.run(debug=True, port=9000)
