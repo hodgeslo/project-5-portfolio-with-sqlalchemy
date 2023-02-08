@@ -2,46 +2,49 @@ from flask import render_template, url_for, request, redirect
 from models import app, Project, db, add_csv
 import datetime
 
+ROWS_PER_PAGE = 5
+
+
+def page_results():
+    page = request.args.get('page', 1, type=int)
+    projects = Project.query.paginate(page=page, per_page=ROWS_PER_PAGE)
+    return projects
+
 
 @app.route('/')
 def index():
-    projects = Project.query.all()
-    nav_projects = Project.query.limit(4)
-    page = db.paginate(db.select(Project))
-    return render_template('index.html', projects=projects, nav_projects=nav_projects, page=page)
+    projects = page_results()
+    return render_template('index.html', projects=projects)
 
 
 @app.route('/about')
 def about():
-    projects = Project.query.all()
-    nav_projects = Project.query.limit(4)
-    return render_template('about.html', projects=projects, nav_projects=nav_projects)
+    projects = page_results()
+    return render_template('about.html', projects=projects)
 
 
 @app.route('/contact')
 def contact():
-    projects = Project.query.all()
-    nav_projects = Project.query.limit(4)
-    return render_template('contact.html', projects=projects, nav_projects=nav_projects)
+    projects = page_results()
+    return render_template('contact.html', projects=projects)
 
 
 @app.route('/skills')
 def skills():
-    projects = Project.query.all()
-    nav_projects = Project.query.limit(4)
-    return render_template('skills.html', projects=projects, nav_projects=nav_projects)
+    projects = page_results()
+    return render_template('skills.html', projects=projects)
 
 
 @app.route('/project/<id>')
 def detail_project(id):
     get_project = Project.query.get_or_404(id)
-    nav_projects = Project.query.limit(4)
-    return render_template('detail.html', get_project=get_project, nav_projects=nav_projects)
+    projects = page_results()
+    return render_template('detail.html', get_project=get_project, projects=projects)
 
 
 @app.route('/project/new', methods=['GET', 'POST'])
 def add_project():
-    nav_projects = Project.query.limit(4)
+    projects = page_results()
     if request.form:
         print(request.form)
         new_project = Project(
@@ -54,19 +57,30 @@ def add_project():
         db.session.add(new_project)
         db.session.commit()
         return redirect(url_for('index'))
-    return render_template('addproject.html', nav_projects=nav_projects)
+    return render_template('addproject.html', projects=projects)
 
 
 @app.route('/project/<id>/edit', methods=['GET', 'POST'])
 def edit_project(id):
     get_project = Project.query.get_or_404(id)
-    nav_projects = Project.query.limit(4)
-    return render_template('projectform.html', get_project=get_project, nav_projects=nav_projects)
+    projects = page_results()
+    if request.form:
+        get_project.title = request.form['title']
+        get_project.date_created = datetime.datetime.strptime(request.form['date'], '%Y-%m-%d')
+        get_project.description = request.form['desc']
+        get_project.skills = request.form['skills']
+        get_project.repo_link = request.form['github']
+        return redirect(url_for('index'))
+    return render_template('projectform.html', get_project=get_project, projects=projects)
 
 
 @app.route('/project/<id>/delete', methods=['GET', 'POST'])
 def delete_project(id):
-    return render_template('index.html')
+    projects = page_results()
+    get_project = Project.query.get_or_404(id)
+    db.session.delete(get_project)
+    db.session.commit()
+    return redirect(url_for('index'))
 
 
 @app.errorhandler(404)
