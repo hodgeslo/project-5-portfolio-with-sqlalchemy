@@ -1,4 +1,4 @@
-from flask import render_template, url_for, request, redirect
+from flask import render_template, url_for, request, redirect, flash
 from models import app, Project, db, add_csv
 import datetime
 
@@ -65,21 +65,26 @@ def edit_project(id):
     get_project = Project.query.get_or_404(id)
     projects = page_results()
     if request.form:
+        print(request.form)
         get_project.title = request.form['title']
         get_project.date_created = datetime.datetime.strptime(request.form['date'], '%Y-%m-%d')
         get_project.description = request.form['desc']
         get_project.skills = request.form['skills']
         get_project.repo_link = request.form['github']
+
+        db.session.commit()
+
         return redirect(url_for('index'))
     return render_template('projectform.html', get_project=get_project, projects=projects)
 
 
 @app.route('/project/<id>/delete', methods=['GET', 'POST'])
 def delete_project(id):
-    projects = page_results()
+    # projects = page_results()
     get_project = Project.query.get_or_404(id)
     db.session.delete(get_project)
     db.session.commit()
+    flash('Project has been deleted from database.')
     return redirect(url_for('index'))
 
 

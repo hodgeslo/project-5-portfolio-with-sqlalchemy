@@ -5,6 +5,7 @@ from os import path
 import csv
 
 app = Flask(__name__)
+app.secret_key = b'>D9c8Ln2X)Eo$Tox2}rU.'
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///projects.db"
 db = SQLAlchemy(app)
 
