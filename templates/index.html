@@ -36,7 +36,7 @@
         <div id="project-list">
             {%  for project in projects %}
             <div id="project{{ project.id }}" class="a-project">
-                <h3>{{ project.title }}</h3>
+                <a href="/project/{{ project.id }}"><h3>{{ project.title }}</h3></a>
                 <a href="{{ project.repo_link }}" class="github-btn">
                     <i class="fab fa-github"></i>
                     View on GitHub
@@ -45,58 +45,29 @@
                     {{ project.description }}
                 </p>
                 <p>
-                    {% for key, value in project.skills.items() %}
-                        Skills: {{ value }}
-                    {% endfor %}
+                    Skills: {{ project.skills }}
                 </p>
             </div>
             {% endfor %}
-{#            <div id="project2" class="a-project">#}
-{#                <h3>Project Title</h3>#}
-{#                <a href="#" class="github-btn">#}
-{#                    <i class="fab fa-github"></i>#}
-{#                    View on GitHub#}
-{#                </a>#}
-{#                <p>#}
-{#                    Pastry wafer chocolate cake caramels.#}
-{#                    Gummi bears pudding sugar plum macaroon.#}
-{#                </p>#}
-{#                <p>#}
-{#                    Skills: Pastry wafer chocolate cake caramels.#}
-{#                    Gummi bears pudding sugar plum macaroon.#}
-{#                </p>#}
-{#            </div>#}
-{#            <div id="project3" class="a-project">#}
-{#                <h3>Project Title</h3>#}
-{#                <a href="#" class="github-btn">#}
-{#                    <i class="fab fa-github"></i>#}
-{#                    View on GitHub#}
-{#                </a>#}
-{#                <p>#}
-{#                    Pastry wafer chocolate cake caramels.#}
-{#                    Gummi bears pudding sugar plum macaroon.#}
-{#                </p>#}
-{#                <p>#}
-{#                    Skills: Pastry wafer chocolate cake caramels.#}
-{#                    Gummi bears pudding sugar plum macaroon.#}
-{#                </p>#}
-{#            </div>#}
-{#            <div id="project4" class="a-project">#}
-{#                <h3>Project Title</h3>#}
-{#                <a href="#" class="github-btn">#}
-{#                    <i class="fab fa-github"></i>#}
-{#                    View on GitHub#}
-{#                </a>#}
-{#                <p>#}
-{#                    Pastry wafer chocolate cake caramels.#}
-{#                    Gummi bears pudding sugar plum macaroon.#}
-{#                </p>#}
-{#                <p>#}
-{#                    Skills: Pastry wafer chocolate cake caramels.#}
-{#                    Gummi bears pudding sugar plum macaroon.#}
-{#                </p>#}
-{#            </div>#}
         </div>
+    {% macro render_pagination(pagination, endpoint) %}
+  <div class="page-items">
+    {{ pagination.first }} - {{ pagination.last }} of {{ pagination.total }}
+  </div>
+  <div class="pagination">
+    {% for page in pagination.iter_pages() %}
+      {% if page %}
+        {% if page != pagination.page %}
+          <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+        {% else %}
+          <strong>{{ page }}</strong>
+        {% endif %}
+      {% else %}
+        <span class=ellipsis>…</span>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endmacro %}
         <div id="triangle4"></div>
     </section>
     <section id="contact">
