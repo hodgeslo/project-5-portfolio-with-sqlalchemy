@@ -39,8 +39,9 @@ def skills():
 @app.route('/project/<int:id>')
 def detail_project(id):
     get_project = Project.query.get_or_404(id)
+    get_skills = get_project.skills
     projects = page_results()
-    return render_template('detail.html', get_project=get_project, projects=projects, my_name=MY_NAME)
+    return render_template('detail.html', get_project=get_project, projects=projects, my_name=MY_NAME, get_skills=get_skills)
 
 
 @app.route('/project/new', methods=['GET', 'POST'])
