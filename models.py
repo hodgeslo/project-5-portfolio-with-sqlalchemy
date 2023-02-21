@@ -104,5 +104,3 @@ def add_csv():
 #         print(f"CSV to import not found.")
 #         print(f"Quitting application...")
 #         return False
-
-
