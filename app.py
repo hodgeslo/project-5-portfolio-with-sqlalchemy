@@ -30,10 +30,10 @@ def contact():
     return render_template('contact.html', projects=projects, my_name=MY_NAME)
 
 
-@app.route('/skills')
-def skills():
-    projects = page_results()
-    return render_template('skills.html', projects=projects, my_name=MY_NAME)
+# @app.route('/skills')
+# def skills():
+#     projects = page_results()
+#     return render_template('skills.html', projects=projects, my_name=MY_NAME)
 
 
 @app.route('/project/<int:id>')

@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import datetime
 from os import path
 import csv
+import datetime
 
 app = Flask(__name__)
 app.secret_key = b'>D9c8Ln2X)Eo$Tox2}rU.'
@@ -31,33 +31,6 @@ def __repr__(self):
     Repo Link: {self.repo_link}
     '''
 
-
-# def add_csv_():
-#     csv_file_to_import = 'projects.csv'
-#     if path.isfile(csv_file_to_import):
-#         db.create_all()
-#         with open(csv_file_to_import) as csvfile:
-#             data = csv.reader(csvfile, delimiter='\t')
-#             next(data)  # <<< skip header row
-#             for row in data:
-#                 product_in_db = db.session.query(Project).filter(Project.title == row[0]).one_or_none()
-#                 if product_in_db is None:
-#                     title = row[0]
-#                     date_created = datetime.datetime.strptime(row[1], '%m/%d/%Y')
-#                     description = row[2]
-#                     skills = row[3]
-#                     repo_link = row[4]
-#                     new_project = Project(title=title, date_created=date_created,
-#                                           description=description, skills=skills, repo_link=repo_link)
-#                     db.session.add(new_project)
-#             db.session.commit()
-#         return True
-#     else:
-#         print(f"CSV to import not found.")
-#         print(f"Quitting application...")
-#         return False
-
-
 def add_csv():
     csv_file_to_import = 'projects.txt'
     if path.isfile(csv_file_to_import):
@@ -81,26 +54,3 @@ def add_csv():
         print(f"CSV to import not found.")
         print(f"Quitting application...")
         return False
-
-
-# def add_csv_dict():
-#     csv_file_to_import = 'projects.csv'
-#     if path.isfile(csv_file_to_import):
-#         db.create_all()
-#         with open(csv_file_to_import, newline='') as csvfile:
-#             reader = csv.DictReader(csvfile, delimiter='\t')
-#             for row in reader:
-#                 title = row['title']
-#                 date_created = datetime.datetime.strptime(row['date_created'], '%m/%d/%Y')
-#                 description = row['description']
-#                 skills = row['skills']
-#                 repo_link = row['repo_link']
-#                 new_project = Project(title=title, date_created=date_created,
-#                                       description=description, skills=skills, repo_link=repo_link)
-#                 db.session.add(new_project)
-#             db.session.commit()
-#         return True
-#     else:
-#         print(f"CSV to import not found.")
-#         print(f"Quitting application...")
-#         return False
