@@ -4,6 +4,7 @@ import datetime
 
 ROWS_PER_PAGE = 5
 MY_NAME = "Lonnie Hodges"
+PAGE_TITLE = f"{MY_NAME} - Python Developer"
 
 
 def page_results():
@@ -15,19 +16,22 @@ def page_results():
 @app.route('/')
 def index():
     projects = page_results()
-    return render_template('index.html', projects=projects, my_name=MY_NAME)
+    page_title = f"Home - {PAGE_TITLE}"
+    return render_template('index.html', projects=projects, my_name=MY_NAME, page_title=page_title)
 
 
 @app.route('/about')
 def about():
     projects = page_results()
-    return render_template('about.html', projects=projects, my_name=MY_NAME)
+    page_title = f"About - {PAGE_TITLE}"
+    return render_template('about.html', projects=projects, my_name=MY_NAME, page_title=page_title)
 
 
 @app.route('/contact')
 def contact():
     projects = page_results()
-    return render_template('contact.html', projects=projects, my_name=MY_NAME)
+    page_title = f"Contact - {PAGE_TITLE}"
+    return render_template('contact.html', projects=projects, my_name=MY_NAME, page_title=page_title)
 
 
 # @app.route('/skills')
@@ -41,12 +45,15 @@ def detail_project(id):
     get_project = Project.query.get_or_404(id)
     get_skills = get_project.skills
     projects = page_results()
-    return render_template('detail.html', get_project=get_project, projects=projects, my_name=MY_NAME, get_skills=get_skills)
+    page_title = f"Project Detail - {PAGE_TITLE}"
+    return render_template('detail.html', get_project=get_project, projects=projects, my_name=MY_NAME,
+                           get_skills=get_skills, page_title=page_title)
 
 
 @app.route('/project/new', methods=['GET', 'POST'])
 def add_project():
     projects = page_results()
+    page_title = f"Add Project - {PAGE_TITLE}"
     if request.form:
         print(request.form)
         new_project = Project(
@@ -59,13 +66,14 @@ def add_project():
         db.session.add(new_project)
         db.session.commit()
         return redirect(url_for('index'))
-    return render_template('addproject.html', projects=projects, my_name=MY_NAME)
+    return render_template('addproject.html', projects=projects, my_name=MY_NAME, page_title=page_title)
 
 
 @app.route('/project/<int:id>/edit', methods=['GET', 'POST'])
 def edit_project(id):
     get_project = Project.query.get_or_404(id)
     projects = page_results()
+    page_title = f"Edit Project - {PAGE_TITLE}"
     if request.form:
         print(request.form)
         get_project.title = request.form['title']
@@ -77,7 +85,8 @@ def edit_project(id):
         db.session.commit()
 
         return redirect(url_for('index'))
-    return render_template('projectform.html', get_project=get_project, projects=projects, my_name=MY_NAME)
+    return render_template('projectform.html', get_project=get_project, projects=projects, my_name=MY_NAME,
+                           page_title=page_title)
 
 
 @app.route('/project/<int:id>/delete', methods=['GET', 'POST'])
@@ -93,7 +102,8 @@ def delete_project(id):
 @app.errorhandler(404)
 def not_found(error):
     projects = page_results()
-    return render_template('404.html', msg=error, projects=projects, my_name=MY_NAME), 404
+    page_title = f"{PAGE_TITLE} - Page Not Found"
+    return render_template('404.html', msg=error, projects=projects, my_name=MY_NAME, page_title=page_title), 404
 
 
 if __name__ == '__main__':

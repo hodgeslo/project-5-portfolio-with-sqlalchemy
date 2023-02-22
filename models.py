@@ -31,6 +31,7 @@ def __repr__(self):
     Repo Link: {self.repo_link}
     '''
 
+
 def add_csv():
     csv_file_to_import = 'projects.txt'
     if path.isfile(csv_file_to_import):
